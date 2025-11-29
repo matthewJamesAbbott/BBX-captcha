@@ -28,6 +28,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@monaco-editor/react": "^4.7.0",
     "@popperjs/core": "^2.11.8",
+    "@vercel/kv": "^3.0.0",
     "avrgirl-arduino": "github:bugboxau/avrgirl-arduino",
     "blockly": "^10.4.3",
     "bootstrap": "^5.3.7",
