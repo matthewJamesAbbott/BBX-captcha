@@ -1,0 +1,35 @@
+// api/server.mjs
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import libraryHandler from "./library.js"; // reuses your existing Vercel handler
+
+dotenv.config({ path: ".env.local" });
+
+console.log("[library-api] env", { hasKey: !!process.env.AIRTABLE_API_KEY, base: process.env.AIRTABLE_BASE_ID });
+
+const app = express();
+const PORT = process.env.PORT || 3200;
+
+// Keep CORS open in dev; tighten with ALLOWED_ORIGINS in prod if you want
+const allowed = (process.env.ALLOWED_ORIGINS || "*")
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (allowed.includes("*") || !origin || allowed.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  }
+}));
+
+// Mirror the route your UI already calls
+app.get("/api/library", (req, res) => libraryHandler(req, res));
+
+// optional healthcheck
+app.get("/api/healthz", (_req, res) => res.json({ ok: true }));
+
+app.listen(PORT, () => {
+  console.log(`[library-api] listening on http://localhost:${PORT}`);
+});

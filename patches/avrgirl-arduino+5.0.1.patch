@@ -1,0 +1,44 @@
+diff --git a/node_modules/avrgirl-arduino/dist/avrgirl-arduino.global.js b/node_modules/avrgirl-arduino/dist/avrgirl-arduino.global.js
+index 78e4504..21e4b39 100644
+--- a/node_modules/avrgirl-arduino/dist/avrgirl-arduino.global.js
++++ b/node_modules/avrgirl-arduino/dist/avrgirl-arduino.global.js
+@@ -14637,7 +14637,7 @@ stk500.prototype.sync = function (stream, attempts, timeout, done) {
+ stk500.prototype.verifySignature = function (stream, signature, timeout, done) {
+ 	this.log("verify signature");
+ 	var self = this;
+-	match = Buffer.concat([
++	var match = Buffer.concat([
+     Buffer.from([Statics.Resp_STK_INSYNC]),
+     signature,
+     Buffer.from([Statics.Resp_STK_OK])
+@@ -14889,7 +14889,7 @@ stk500.prototype.verify = function (stream, hex, pageSize, timeout, done) {
+ stk500.prototype.verifyPage = function (stream, writeBytes, pageSize, timeout, done) {
+ 	this.log("verify page");
+ 	var self = this;
+-	match = Buffer.concat([
++	var match = Buffer.concat([
+     Buffer.from([Statics.Resp_STK_INSYNC]),
+     writeBytes,
+     Buffer.from([Statics.Resp_STK_OK])
+diff --git a/node_modules/avrgirl-arduino/dist/avrgirl-arduino.js b/node_modules/avrgirl-arduino/dist/avrgirl-arduino.js
+index 1834a95..9c16d5d 100644
+--- a/node_modules/avrgirl-arduino/dist/avrgirl-arduino.js
++++ b/node_modules/avrgirl-arduino/dist/avrgirl-arduino.js
+@@ -14646,7 +14646,7 @@ stk500.prototype.sync = function (stream, attempts, timeout, done) {
+ stk500.prototype.verifySignature = function (stream, signature, timeout, done) {
+ 	this.log("verify signature");
+ 	var self = this;
+-	match = Buffer.concat([
++	var match = Buffer.concat([
+     Buffer.from([Statics.Resp_STK_INSYNC]),
+     signature,
+     Buffer.from([Statics.Resp_STK_OK])
+@@ -14898,7 +14898,7 @@ stk500.prototype.verify = function (stream, hex, pageSize, timeout, done) {
+ stk500.prototype.verifyPage = function (stream, writeBytes, pageSize, timeout, done) {
+ 	this.log("verify page");
+ 	var self = this;
+-	match = Buffer.concat([
++	var match = Buffer.concat([
+     Buffer.from([Statics.Resp_STK_INSYNC]),
+     writeBytes,
+     Buffer.from([Statics.Resp_STK_OK])

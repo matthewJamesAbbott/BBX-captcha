@@ -1,0 +1,60 @@
+{
+  "name": "bbx",
+  "version": "1.0.0",
+  "description": "Bugbox Digital Learning Environment",
+  "private": true,
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dev:web": "vite",
+    "dev:compiler": "podman build -t bbx-compiler ./compiler-api && podman run --rm -p 3100:3000 bbx-compiler",
+    "dev:library": "node api/server.mjs",
+    "dev:api": "npx vercel dev --listen 3001",
+    "dev": "concurrently -k \"npm run dev:library\" \"npm run dev:web\"",
+    "dev:full": "concurrently -k \"npm run dev:compiler\" \"npm run dev:library\" \"npm run dev:api\" \"npm run dev:web\"",
+    "build": "npm run vercel-build",
+    "vercel-build": "npm run prebuild && rm -rf node_modules/.vite && patch-package && vite build",
+    "preview": "vite preview",
+    "postinstall": "node scripts/fix-exec.cjs && patch-package",
+    "prebuild": "node scripts/fix-exec.cjs"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "author": "Bugbox",
+  "license": "ISC",
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@monaco-editor/react": "^4.7.0",
+    "@popperjs/core": "^2.11.8",
+    "avrgirl-arduino": "github:bugboxau/avrgirl-arduino",
+    "blockly": "^10.4.3",
+    "bootstrap": "^5.3.7",
+    "canvas-confetti": "^1.9.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "moment": "^2.30.1",
+    "monaco-editor": "^0.52.2",
+    "papaparse": "^5.5.3",
+    "re-resizable": "^6.10.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "undici": "^7.16.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "patch-package": "^8.0.0",
+    "postcss": "^8.5.6",
+    "sass": "^1.89.2",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vite-plugin-full-reload": "^1.2.0"
+  }
+}

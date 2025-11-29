@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BBX</title>
+
+    <!-- Fonts & Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/Favicon256.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/style.scss?v=4" />
+  </head>
+
+  <body>
+    <!-- React app mount point -->
+    <div id="root"></div>
+
+    <!-- React/Vite entry -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Arduino Web Uploader -->
+    <script src="https://webusb.github.io/arduino-web-uploader/arduino-web-uploader.js"></script>
+
+    <!-- Select Device Modal -->
+    <div id="deviceModal" class="bbx-modal hidden">
+      <div class="bbx-modal-content">
+        <h2>Let’s Get Your Bugbox Connected!</h2>
+        <p id="deviceStep">Step 1: Plug in your Bugbox device via USB.</p>
+        <div class="bbx-modal-actions">
+          <button id="deviceCancelButton" class="bbx-btn">Cancel</button>
+          <button id="deviceNextButton" class="bbx-btn bbx-btn-primary">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Launch Countdown Pop-Up -->
+    <div id="countdownPopup" class="bbx-popup hidden">
+      <div class="bbx-countdown-content">
+        <div id="countdownNumber" class="countdown-number">3</div>
+        <div id="countdownStage" class="countdown-stage">Compiling code…</div>
+      </div>
+    </div>
+  </body>
+</html>

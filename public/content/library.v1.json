@@ -1,0 +1,155 @@
+{
+    "collections": [
+      {
+        "id": "discover-program",
+        "title": "Discover",
+        "order": 1,
+        "updatedAt": "2025-11-01T00:00:00Z",
+        "modules": [
+          {
+            "id": "disco-01",
+            "title": "Instructions",
+            "order": 1,
+            "items": [
+              {
+                "id": "buildgen4",
+                "title": "Build Bot",
+                "kind": "canva",
+                "order": 1,
+                "url": "https://www.canva.com/design/DAG3VhbEj_E/4zqFfgKrwn8td71z8IeV7A/view?utm_content=DAG3VhbEj_E&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7bd105e4a6",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              },
+              {
+                "id": "codegen4",
+                "title": "Code Bot",
+                "kind": "canva",
+                "order": 2,
+                "url": "https://www.canva.com/design/DAGl-1czQt0/_OHs8Smok1k_X11f0Fc3cw/view?utm_content=DAGl-1czQt0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7a380244d3",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              },
+              {
+                "id": "use-hospital",
+                "title": "Build Bot Test",
+                "kind": "canva",
+                "order": 3,
+                "url": "https://www.canva.com/design/DAG3sSx3Jlk/xDddULaMLPx92n9Ja4NDBQ/view?utm_content=DAG3sSx3Jlk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hbae9aa0308",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "explore-program",
+        "title": "Explore",
+        "order": 2,
+        "updatedAt": "2025-11-01T00:00:00Z",
+        "modules": [
+          {
+            "id": "expo-01",
+            "title": "Instructions",
+            "order": 1,
+            "items": [
+              {
+                "id": "explore-placeholder-1",
+                "title": "Embed Test",
+                "kind": "canva",
+                "order": 1,
+                "url": "https://www.canva.com/design/DAG3VhbEj_E/x9BuC-YlvMcFq3zKzbMCTQ/view",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              },
+              {
+                "id": "explore-placeholder-2",
+                "title": "PLACEHOLDER",
+                "kind": "canva",
+                "order": 2,
+                "url": "https://www.bugbox.au/",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "create-program",
+        "title": "Create",
+        "order": 3,
+        "updatedAt": "2025-11-01T00:00:00Z",
+        "modules": [
+          {
+            "id": "create-01",
+            "title": "Project Requirements",
+            "order": 1,
+            "items": [
+              {
+                "id": "create-placeholder-1",
+                "title": "Project A",
+                "kind": "link",
+                "order": 1,
+                "url": "https://www.bugbox.au/",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              },
+              {
+                "id": "create-placeholder-2",
+                "title": "Project B",
+                "kind": "link",
+                "order": 2,
+                "url": "https://www.bugbox.au/",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "PD-program",
+        "title": "Teacher PD",
+        "order": 3,
+        "updatedAt": "2025-11-01T00:00:00Z",
+        "modules": [
+          {
+            "id": "create-01",
+            "title": "Classroom Management",
+            "order": 1,
+            "items": [
+              {
+                "id": "create-placeholder-1",
+                "title": "Topic 1",
+                "kind": "link",
+                "order": 1,
+                "url": "https://www.bugbox.au/",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              },
+              {
+                "id": "create-placeholder-2",
+                "title": "Topic 2",
+                "kind": "link",
+                "order": 2,
+                "url": "https://www.bugbox.au/",
+                "canEmbed": true,
+                "aspect": "3:4",
+                "tags": ["slides", "pd"]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
