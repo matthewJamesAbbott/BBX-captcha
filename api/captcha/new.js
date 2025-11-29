@@ -1,15 +1,14 @@
 import crypto from "crypto";
-
-let captchaStore = {}; // In-memory store. Replace with DB/Redis in production.
+import { kv } from "@vercel/kv";
 
 const COMPONENTS = [
   { id: "arduino", name: "Arduino Board" },
-  { id: "led", name: "LED" },
-  { id: "resistor", name: "Resistor" },
-  { id: "servo", name: "Servo Motor" },
+{ id: "led", name: "LED" },
+{ id: "resistor", name: "Resistor" },
+{ id: "servo", name: "Servo Motor" },
 ];
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const ticket = crypto.randomUUID();
 
   // Shuffle components to randomize positions
@@ -19,11 +18,8 @@ export default function handler(req, res) {
   const solution = {};
   shuffled.forEach((comp) => (solution[comp.id] = comp.id));
 
-  // Store solution server-side with expiration
-  captchaStore[ticket] = {
-    solution,
-    expires: Date.now() + 5 * 60 * 1000, // 5 minutes
-  };
+  // Store solution in Vercel KV with 5-minute expiration
+  await kv.set(`captcha:${ticket}`, solution, { ex: 300 });
 
   // Respond with images (paths in /Assets/Images/)
   res.status(200).json({

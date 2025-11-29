@@ -1,20 +1,22 @@
-let captchaStore = {}; // same in-memory store, shared or imported
+import { kv } from "@vercel/kv";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const { ticket, matches } = req.body;
 
-  const record = captchaStore[ticket];
-  if (!record || record.expires < Date.now()) {
-    return res.status(400).json({ success: false, message: "Captcha expired" });
+  // Retrieve solution from Vercel KV
+  const solution = await kv.get(`captcha:${ticket}`);
+
+  if (!solution) {
+    return res.status(400).json({ success: false, message: "Captcha expired or invalid" });
   }
 
   // Check if all matches are correct
-  const correct = Object.entries(record.solution).every(
+  const correct = Object.entries(solution).every(
     ([shadowId, componentId]) => matches[shadowId] === componentId
   );
 
-  // Optionally delete ticket after verification
-  delete captchaStore[ticket];
+  // Delete ticket after verification
+  await kv.del(`captcha:${ticket}`);
 
   res.json({ success: correct });
 }
