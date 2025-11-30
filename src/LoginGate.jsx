@@ -1,4 +1,4 @@
-import ShadowCapture from "./ShadowCapture";
+import ShadowCapture from "./components/ShadowCapture";
 
 export default function LoginGate({ onCaptchaVerified }) {
   return (
