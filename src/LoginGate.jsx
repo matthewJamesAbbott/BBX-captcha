@@ -66,53 +66,61 @@ export default function LoginGate({ children }) {
     }
   };
 
-  // Show loading state while checking token
   if (loading) {
     return (
       <div style={{ 
         display: "flex", 
         justifyContent: "center", 
         alignItems: "center", 
-        height: "100vh" 
+        height: "100vh",
+        background: "black",
+        color: "white"
       }}>
         <p>Loading...</p>
       </div>
     );
   }
 
-  // If user is verified, render full BugBox UI
   if (loggedIn) return children;
 
-  // Otherwise show login UI
+  // Main login UI with scrollable area
   return (
-
-    <div style={{ 
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "black",
-      padding: 20
-    }}>
-     <div style={{
-        maxWidth: 600,
-        width: "100%",
-        backgroundColor: "black",
-        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-        padding: 40
-      }}>
-
-<div style={{ backgroundColor: "white",  width: "100%"}}>
-<img 
-  src="/Assets/Images/logo.png" 
-  alt="BugBox Logo"
-  style={{ 
-    width: "200px",  // adjust size as needed
-    height: "auto",
-    marginBottom: 20
-  }}
-/>
-</div>
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        background: "black",
+        color: "white",
+        overflowY: "auto",
+        padding: 0,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 600,
+          margin: "0 auto",
+          padding: "40px 16px 40px 16px",
+        }}
+      >
+        <div style={{ backgroundColor: "white", textAlign: "center", padding: "18px 0 8px 0", borderRadius: 10 }}>
+          <img
+            src="/Assets/Images/logo.png"
+            alt="BugBox Logo"
+            style={{
+              width: "180px",
+              height: "auto",
+              marginBottom: 10,
+            }}
+          />
+        </div>
+        <h2 style={{
+          color: "orange",
+          textAlign: "center",
+          margin: "28px 0 22px 0",
+          fontWeight: 800
+        }}>
+          BugBox Login Gate
+        </h2>
         <ShadowCapture onVerified={() => setCaptchaPassed(true)} />
 
         {error && (
@@ -127,35 +135,37 @@ export default function LoginGate({ children }) {
             {error}
           </div>
         )}
- <p style={{
+        <p style={{
           color: "white",
-          marginBottom: 30,
-          fontSize: 16
-        }}><b>
-          Complete the CAPTCHA to continue
-        </b></p>
-
-        <div style={{ 
-          marginTop: 20,
-          marginBottom: 20,
-          display: "flex",
-          alignItems: "center"
+          marginBottom: 22,
+          fontSize: 16,
+          textAlign: "center"
         }}>
-          <label style={{ 
-            display: "flex", 
+          <b>Complete the CAPTCHA to continue</b>
+        </p>
+
+        <div style={{
+          marginTop: 10,
+          marginBottom: 15,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+          <label style={{
+            display: "flex",
             alignItems: "center",
             cursor: "pointer",
-            fontSize: 14,
+            fontSize: 15,
             color: "orange"
           }}>
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              style={{ 
+              style={{
                 marginRight: 8,
-                width: 16,
-                height: 16,
+                width: 18,
+                height: 18,
                 cursor: "pointer"
               }}
             />
@@ -168,41 +178,32 @@ export default function LoginGate({ children }) {
           onClick={handleLogin}
           style={{
             width: "100%",
-            padding: "14px 24px",
-            fontSize: 16,
-            fontWeight: 600,
+            padding: "15px 24px",
+            fontSize: 17,
+            fontWeight: 700,
             backgroundColor: captchaPassed ? "green" : "orange",
             color: "white",
             border: "none",
             borderRadius: 8,
             cursor: captchaPassed ? "pointer" : "not-allowed",
             transition: "all 0.2s",
-            opacity: captchaPassed ? 1 : 0.6
-          }}
-          onMouseOver={(e) => {
-            if (captchaPassed) {
-              e.target.style.backgroundColor = "green";
-            }
-          }}
-          onMouseOut={(e) => {
-            if (captchaPassed) {
-              e.target.style.backgroundColor = "green";
-            }
+            opacity: captchaPassed ? 1 : 0.6,
+            marginTop: 14,
           }}
         >
           {captchaPassed ? "Login" : "Complete CAPTCHA First"}
         </button>
-
         <p style={{
           marginTop: 20,
           fontSize: 12,
           color: "white",
           textAlign: "center"
-        }}><b>
-          {rememberMe 
-            ? "You'll stay logged in for 30 days" 
-            : "You'll stay logged in until you close your browser"}
-           </b>
+        }}>
+          <b>
+            {rememberMe
+              ? "You'll stay logged in for 30 days"
+              : "You'll stay logged in until you close your browser"}
+          </b>
         </p>
       </div>
     </div>
