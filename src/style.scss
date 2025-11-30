@@ -8,6 +8,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  min-height: 100vh;
+  height: 100%;
+  overflow-y: auto !important;
+}
 
 
 // -----------------------------
@@ -100,6 +105,8 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+
 
 #app {
   display: flex;
