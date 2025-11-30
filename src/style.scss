@@ -1,3 +1,9 @@
+html, body {
+  min-height: 100vh;
+  height: 100%;
+  overflow-y: auto !important;
+}
+
 /* Import external SCSS libraries first */
 @use 'bootstrap/scss/bootstrap';
 
@@ -8,11 +14,7 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  min-height: 100vh;
-  height: 100%;
-  overflow-y: auto !important;
-}
+
 
 
 // -----------------------------
