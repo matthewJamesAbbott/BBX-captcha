@@ -9,6 +9,7 @@ import { CSS } from "@dnd-kit/utilities";
  */
 export default function ShadowCapture({ onVerified }) {
   const [ticket, setTicket] = useState(null);
+  const [token, setToken] = useState(null); // JWT token from backend
   const [components, setComponents] = useState([]);
   const [shadows, setShadows] = useState([]);
   const [matches, setMatches] = useState({});
@@ -23,23 +24,24 @@ export default function ShadowCapture({ onVerified }) {
   const fetchNewCaptcha = () => {
     setLoading(true);
     setError(null);
-    
+
     fetch("/api/captcha/new")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load CAPTCHA");
-        return res.json();
-      })
-      .then((data) => {
-        setTicket(data.ticket);
-        setComponents(data.components);
-        setShadows(data.shadows);
-        setMatches({});
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to load CAPTCHA");
+      return res.json();
+    })
+    .then((data) => {
+      setTicket(data.ticket);
+      setToken(data.token); // Save JWT for verification
+      setComponents(data.components);
+      setShadows(data.shadows);
+      setMatches({});
+      setLoading(false);
+    })
+    .catch((err) => {
+      setError(err.message);
+      setLoading(false);
+    });
   };
 
   const handleDragEnd = async (event) => {
@@ -55,7 +57,7 @@ export default function ShadowCapture({ onVerified }) {
         const res = await fetch("/api/captcha/verify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ticket, matches: newMatches }),
+          body: JSON.stringify({ token, matches: newMatches }), // Send JWT with answer
         });
 
         const data = await res.json();
@@ -75,7 +77,7 @@ export default function ShadowCapture({ onVerified }) {
   if (loading) {
     return (
       <div style={{ padding: 20, textAlign: "center" }}>
-        <p>Loading CAPTCHA...</p>
+      <p>Loading CAPTCHA...</p>
       </div>
     );
   }
@@ -83,57 +85,57 @@ export default function ShadowCapture({ onVerified }) {
   if (error) {
     return (
       <div style={{ padding: 20, textAlign: "center", color: "red" }}>
-        <p>Error: {error}</p>
-        <button onClick={fetchNewCaptcha}>Try Again</button>
+      <p>Error: {error}</p>
+      <button onClick={fetchNewCaptcha}>Try Again</button>
       </div>
     );
   }
 
   return (
     <div style={{ padding: 20 }}>
-      <h3 style={{ marginBottom: 15 }}>Drag components to their matching shadows</h3>
-      
-      <DndContext onDragEnd={handleDragEnd}>
-        <div style={{ 
-          display: "flex", 
-          flexWrap: "wrap", 
-          gap: 15, 
-          marginBottom: 30,
-          padding: 15,
-          backgroundColor: "#f9fafb",
-          borderRadius: 8
-        }}>
-          {components.map((comp) => (
-            <DraggableComponent 
-              key={comp.id} 
-              component={comp} 
-              isMatched={Object.values(matches).includes(comp.id)} 
-            />
-          ))}
-        </div>
+    <h3 style={{ marginBottom: 15 }}>Drag components to their matching shadows</h3>
 
-        <div style={{ 
-          display: "flex", 
-          flexWrap: "wrap", 
-          gap: 15,
-          padding: 15,
-          backgroundColor: "#f3f4f6",
-          borderRadius: 8
-        }}>
-          {shadows.map((shadow) => {
-            const matchedComponentId = matches[shadow.id];
-            const matchedComponent = components.find((c) => c.id === matchedComponentId);
-            return (
-              <ShadowDropZone
-                key={shadow.id}
-                shadow={shadow}
-                isMatched={!!matchedComponentId}
-                matchedComponent={matchedComponent}
-              />
-            );
-          })}
-        </div>
-      </DndContext>
+    <DndContext onDragEnd={handleDragEnd}>
+    <div style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 15,
+      marginBottom: 30,
+      padding: 15,
+      backgroundColor: "#f9fafb",
+      borderRadius: 8
+    }}>
+    {components.map((comp) => (
+      <DraggableComponent
+      key={comp.id}
+      component={comp}
+      isMatched={Object.values(matches).includes(comp.id)}
+      />
+    ))}
+    </div>
+
+    <div style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 15,
+      padding: 15,
+      backgroundColor: "#f3f4f6",
+      borderRadius: 8
+    }}>
+    {shadows.map((shadow) => {
+      const matchedComponentId = matches[shadow.id];
+      const matchedComponent = components.find((c) => c.id === matchedComponentId);
+      return (
+        <ShadowDropZone
+        key={shadow.id}
+        shadow={shadow}
+        isMatched={!!matchedComponentId}
+        matchedComponent={matchedComponent}
+        />
+      );
+    })}
+    </div>
+    </DndContext>
     </div>
   );
 }
@@ -159,14 +161,14 @@ function DraggableComponent({ component, isMatched }) {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <img 
-        src={component.image} 
-        alt={component.name} 
-        style={{ width: 64, height: 64, display: "block" }} 
-      />
-      <div style={{ fontSize: 12, marginTop: 5, textAlign: "center" }}>
-        {component.name}
-      </div>
+    <img
+    src={component.image}
+    alt={component.name}
+    style={{ width: 64, height: 64, display: "block" }}
+    />
+    <div style={{ fontSize: 12, marginTop: 5, textAlign: "center" }}>
+    {component.name}
+    </div>
     </div>
   );
 }
@@ -176,34 +178,34 @@ function ShadowDropZone({ shadow, isMatched, matchedComponent }) {
   const { setNodeRef, isOver } = useDroppable({ id: shadow.id });
 
   return (
-    <div 
-      ref={setNodeRef} 
-      style={{
-        width: 100, 
-        height: 100, 
-        border: "3px dashed #9ca3af", 
-        borderRadius: 8,
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center",
-        backgroundColor: isMatched ? "#d1fae5" : isOver ? "#dbeafe" : "white",
-        transition: "all 0.2s",
-        position: "relative"
-      }}
+    <div
+    ref={setNodeRef}
+    style={{
+      width: 100,
+      height: 100,
+      border: "3px dashed #9ca3af",
+      borderRadius: 8,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: isMatched ? "#d1fae5" : isOver ? "#dbeafe" : "white",
+      transition: "all 0.2s",
+      position: "relative"
+    }}
     >
-      {isMatched && matchedComponent ? (
-        <img 
-          src={matchedComponent.image} 
-          alt="" 
-          style={{ width: 64, height: 64 }} 
-        />
-      ) : (
-        <img 
-          src={shadow.shadow} 
-          alt="" 
-          style={{ width: 64, height: 64, opacity: 0.3 }} 
-        />
-      )}
+    {isMatched && matchedComponent ? (
+      <img
+      src={matchedComponent.image}
+      alt=""
+      style={{ width: 64, height: 64 }}
+      />
+    ) : (
+      <img
+      src={shadow.shadow}
+      alt=""
+      style={{ width: 64, height: 64, opacity: 0.3 }}
+      />
+    )}
     </div>
   );
 }
