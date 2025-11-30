@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  useDraggable,
+  useDroppable
+} from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 // Shuffle function (Fisher–Yates)
@@ -14,7 +22,8 @@ function shuffle(array) {
 
 /**
  * ShadowCapture - CAPTCHA UI
- * Renders shadows (row 1) and components (row 2), both shuffled
+ * Renders shadows (row 1) and components (row 2), both shuffled.
+ * Now with DndKit mouse and touch support for mobile/desktop.
  */
 export default function ShadowCapture({ onVerified }) {
   const [ticket, setTicket] = useState(null);
@@ -24,6 +33,11 @@ export default function ShadowCapture({ onVerified }) {
   const [matches, setMatches] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Set up DndKit Sensors for touch and mouse
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 5 } });
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } });
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   useEffect(() => {
     fetchNewCaptcha();
@@ -104,7 +118,7 @@ export default function ShadowCapture({ onVerified }) {
   return (
     <div style={{ padding: 20 }}>
       <h3 style={{ marginBottom: 15 }}>Drag components to their matching shadows</h3>
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         {/* Shadows row */}
         <div style={{
           display: "flex",
@@ -173,6 +187,7 @@ function DraggableComponent({ component, isMatched }) {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    touchAction: "none"
   };
 
   return (
