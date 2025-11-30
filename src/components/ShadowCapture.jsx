@@ -22,9 +22,8 @@ function shuffle(array) {
 
 /**
  * ShadowCapture - CAPTCHA UI
- * Renders shadows (row 1) and components (row 2), both shuffled
- * Now with mobile/desktop DndKit sensors
- * Wrapped in scrollable and full-height container for mobile support
+ * Renders shadows (row 1) and components (row 2), both shuffled.
+ * Now with DndKit mouse and touch support for mobile/desktop.
  */
 export default function ShadowCapture({ onVerified }) {
   const [ticket, setTicket] = useState(null);
@@ -98,82 +97,71 @@ export default function ShadowCapture({ onVerified }) {
     }
   };
 
-  return (
-    <div style={{ minHeight: "100vh", overflowY: "auto", background: "#000", color: "#fff" }}>
-      <div style={{ padding: 20 }}>
-        <h3 style={{ marginBottom: 15, color: "#fff" }}>Drag components to their matching shadows</h3>
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          {/* Shadows row */}
-          <div style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 15,
-            marginBottom: 30,
-            padding: 15,
-            backgroundColor: "#222",
-            borderRadius: 8,
-            justifyContent: "center",
-          }}>
-            {shadows.map((shadow) => {
-              const matchedComponentId = matches[shadow.id];
-              const matchedComponent = components.find((c) => c.id === matchedComponentId);
-              return (
-                <ShadowDropZone
-                  key={shadow.id}
-                  shadow={shadow}
-                  isMatched={!!matchedComponentId}
-                  matchedComponent={matchedComponent}
-                />
-              );
-            })}
-          </div>
-          {/* Components row */}
-          <div style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 15,
-            padding: 15,
-            backgroundColor: "#333",
-            borderRadius: 8,
-            justifyContent: "center",
-          }}>
-            {components.map((comp) => (
-              <DraggableComponent
-                key={comp.id}
-                component={comp}
-                isMatched={Object.values(matches).includes(comp.id)}
-              />
-            ))}
-          </div>
-        </DndContext>
-        {loading &&
-          <div style={{ padding: 20, textAlign: "center", color: "#fff" }}>
-            <p>Loading CAPTCHA...</p>
-          </div>
-        }
-        {error &&
-          <div style={{ padding: 20, textAlign: "center", color: "red" }}>
-            <p>Error: {error}</p>
-            <button onClick={fetchNewCaptcha}>Try Again</button>
-          </div>
-        }
-        {/* Example placement for button */}
-        <div style={{ padding: 32, textAlign: "center" }}>
-          <button style={{
-            marginTop: 24,
-            background: "#8d5c14",
-            color: "#fff",
-            border: "none",
-            borderRadius: 5,
-            padding: "14px 42px",
-            fontSize: "18px",
-            fontWeight: 600,
-            cursor: "pointer"
-          }}>
-            Complete CAPTCHA First
-          </button>
-        </div>
+  if (loading) {
+    return (
+      <div style={{ padding: 20, textAlign: "center" }}>
+        <p>Loading CAPTCHA...</p>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: 20, textAlign: "center", color: "red" }}>
+        <p>Error: {error}</p>
+        <button onClick={fetchNewCaptcha}>Try Again</button>
+      </div>
+    );
+  }
+
+  // --- LAYOUT: first row = shadows, second row = components ---
+  return (
+    <div style={{ padding: 20 }}>
+      <h3 style={{ marginBottom: 15 }}>Drag components to their matching shadows</h3>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        {/* Shadows row */}
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 15,
+          marginBottom: 30,
+          padding: 15,
+          backgroundColor: "#f3f4f6",
+          borderRadius: 8,
+          justifyContent: "center",
+        }}>
+          {shadows.map((shadow) => {
+            const matchedComponentId = matches[shadow.id];
+            const matchedComponent = components.find((c) => c.id === matchedComponentId);
+            return (
+              <ShadowDropZone
+                key={shadow.id}
+                shadow={shadow}
+                isMatched={!!matchedComponentId}
+                matchedComponent={matchedComponent}
+              />
+            );
+          })}
+        </div>
+        {/* Components row */}
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 15,
+          padding: 15,
+          backgroundColor: "#f9fafb",
+          borderRadius: 8,
+          justifyContent: "center",
+        }}>
+          {components.map((comp) => (
+            <DraggableComponent
+              key={comp.id}
+              component={comp}
+              isMatched={Object.values(matches).includes(comp.id)}
+            />
+          ))}
+        </div>
+      </DndContext>
     </div>
   );
 }
@@ -191,7 +179,7 @@ function DraggableComponent({ component, isMatched }) {
     opacity: isDragging ? 0.5 : isMatched ? 0.3 : 1,
     userSelect: "none",
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 8,
     border: "2px solid #e5e7eb",
     transition: "opacity 0.2s",
@@ -209,7 +197,7 @@ function DraggableComponent({ component, isMatched }) {
         alt={component.name}
         style={{ width: 64, height: 64, display: "block" }}
       />
-      <div style={{ fontSize: 12, marginTop: 5, textAlign: "center", color: "#000" }}>
+      <div style={{ fontSize: 12, marginTop: 5, textAlign: "center" }}>
         {component.name}
       </div>
     </div>
@@ -231,7 +219,7 @@ function ShadowDropZone({ shadow, isMatched, matchedComponent }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: isMatched ? "#d1fae5" : isOver ? "#dbeafe" : "#222",
+        backgroundColor: isMatched ? "#d1fae5" : isOver ? "#dbeafe" : "white",
         transition: "all 0.2s",
         position: "relative",
       }}
