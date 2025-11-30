@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { kv } from "@vercel/kv";
+import jwt from "jsonwebtoken";
 
 const COMPONENTS = [
   { id: "arduino", name: "Arduino Board" },
@@ -11,19 +11,25 @@ const COMPONENTS = [
 export default async function handler(req, res) {
   const ticket = crypto.randomUUID();
 
-  // Shuffle components to randomize positions
+  // Shuffle components
   const shuffled = [...COMPONENTS].sort(() => Math.random() - 0.5);
 
   // Solution mapping for this ticket
   const solution = {};
   shuffled.forEach((comp) => (solution[comp.id] = comp.id));
 
-  // Store solution in Vercel KV with 5-minute expiration
-  await kv.set(`captcha:${ticket}`, solution, { ex: 300 });
+  // Create JWT payload
+  const payload = {
+    ticket,
+    solution,
+  };
+  // Sign JWT with 5-minute expiration (best for CAPTCHA)
+  const token = jwt.sign(payload, process.env.CAPTCHA_SECRET, { expiresIn: "5m" });
 
-  // Respond with images (paths in /Assets/Images/)
+  // Respond with images, ticket, and jwt
   res.status(200).json({
     ticket,
+    token, // <-- frontend must store this for verification step!
     components: shuffled.map((c) => ({
       id: c.id,
       name: c.name,
