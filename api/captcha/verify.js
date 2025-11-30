@@ -1,22 +1,23 @@
-import { kv } from "@vercel/kv";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
-  const { ticket, matches } = req.body;
+  const { token, matches } = req.body;
 
-  // Retrieve solution from Vercel KV
-  const solution = await kv.get(`captcha:${ticket}`);
+  if (!token || !matches) {
+    return res.status(400).json({ success: false, message: "Missing data" });
+  }
 
-  if (!solution) {
-    return res.status(400).json({ success: false, message: "Captcha expired or invalid" });
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.CAPTCHA_SECRET);
+  } catch (e) {
+    return res.status(401).json({ success: false, message: "Invalid or expired CAPTCHA" });
   }
 
   // Check if all matches are correct
-  const correct = Object.entries(solution).every(
+  const correct = Object.entries(payload.solution).every(
     ([shadowId, componentId]) => matches[shadowId] === componentId
   );
-
-  // Delete ticket after verification
-  await kv.del(`captcha:${ticket}`);
 
   res.json({ success: correct });
 }
