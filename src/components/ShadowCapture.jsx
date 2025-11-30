@@ -14,7 +14,7 @@ function shuffle(array) {
 
 /**
  * ShadowCapture - CAPTCHA UI
- * Now renders components and shadows independently, side-by-side
+ * Renders shadows (row 1) and components (row 2), both shuffled
  */
 export default function ShadowCapture({ onVerified }) {
   const [ticket, setTicket] = useState(null);
@@ -42,8 +42,8 @@ export default function ShadowCapture({ onVerified }) {
       .then((data) => {
         setTicket(data.ticket);
         setToken(data.token);
-        setComponents(shuffle(data.components)); // Shuffle components
-        setShadows(shuffle(data.shadows));       // Shuffle shadows
+        setComponents(shuffle(data.components));
+        setShadows(shuffle(data.shadows));
         setMatches({});
         setLoading(false);
       })
@@ -100,69 +100,52 @@ export default function ShadowCapture({ onVerified }) {
     );
   }
 
-  // --- LAYOUT: 2 columns, shadows left, components right ---
+  // --- LAYOUT: first row = shadows, second row = components ---
   return (
-    <div style={{
-      padding: 20,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    }}>
-      <h3 style={{ marginBottom: 15 }}>Drag each component onto its matching shadow</h3>
+    <div style={{ padding: 20 }}>
+      <h3 style={{ marginBottom: 15 }}>Drag components to their matching shadows</h3>
       <DndContext onDragEnd={handleDragEnd}>
+        {/* Shadows row */}
         <div style={{
-          display: 'flex',
-          gap: '40px',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          width: '100%',
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 15,
+          marginBottom: 30,
+          padding: 15,
+          backgroundColor: "#f3f4f6",
+          borderRadius: 8,
+          justifyContent: "center",
         }}>
-          {/* Shadows Column */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 18,
-            backgroundColor: "#f3f4f6",
-            padding: 18,
-            borderRadius: 8,
-            minWidth: 140,
-            alignItems: "center",
-          }}>
-            <div style={{ fontWeight: 'bold', marginBottom: 8 }}>Shadows</div>
-            {shadows.map((shadow) => {
-              const matchedComponentId = matches[shadow.id];
-              const matchedComponent = components.find((c) => c.id === matchedComponentId);
-              return (
-                <ShadowDropZone
-                  key={shadow.id}
-                  shadow={shadow}
-                  isMatched={!!matchedComponentId}
-                  matchedComponent={matchedComponent}
-                />
-              );
-            })}
-          </div>
-
-          {/* Components Column */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 18,
-            backgroundColor: "#f9fafb",
-            padding: 18,
-            borderRadius: 8,
-            minWidth: 140,
-            alignItems: "center"
-          }}>
-            <div style={{ fontWeight: 'bold', marginBottom: 8 }}>Components</div>
-            {components.map((comp) => (
-              <DraggableComponent
-                key={comp.id}
-                component={comp}
-                isMatched={Object.values(matches).includes(comp.id)}
+          {shadows.map((shadow) => {
+            const matchedComponentId = matches[shadow.id];
+            const matchedComponent = components.find((c) => c.id === matchedComponentId);
+            return (
+              <ShadowDropZone
+                key={shadow.id}
+                shadow={shadow}
+                isMatched={!!matchedComponentId}
+                matchedComponent={matchedComponent}
               />
-            ))}
-          </div>
+            );
+          })}
+        </div>
+        {/* Components row */}
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 15,
+          padding: 15,
+          backgroundColor: "#f9fafb",
+          borderRadius: 8,
+          justifyContent: "center",
+        }}>
+          {components.map((comp) => (
+            <DraggableComponent
+              key={comp.id}
+              component={comp}
+              isMatched={Object.values(matches).includes(comp.id)}
+            />
+          ))}
         </div>
       </DndContext>
     </div>
@@ -186,7 +169,6 @@ function DraggableComponent({ component, isMatched }) {
     borderRadius: 8,
     border: "2px solid #e5e7eb",
     transition: "opacity 0.2s",
-    marginBottom: 2,
     width: 100,
     display: "flex",
     flexDirection: "column",
@@ -225,7 +207,6 @@ function ShadowDropZone({ shadow, isMatched, matchedComponent }) {
         backgroundColor: isMatched ? "#d1fae5" : isOver ? "#dbeafe" : "white",
         transition: "all 0.2s",
         position: "relative",
-        marginBottom: 2,
       }}
     >
       {isMatched && matchedComponent ? (
